@@ -1,21 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import AppLoading from "expo-app-loading";
+import { StyleSheet, Text, View } from "react-native";
+import {
+  useFonts,
+  Quicksand_300Light,
+  Quicksand_500Medium,
+  Quicksand_700Bold,
+} from "@expo-google-fonts/quicksand";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  const [fontsLoaded] = useFonts({
+    Quicksand_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>TESTE DE FONTE</Text>
+        <StatusBar style="auto" />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    color: "#fff",
+    fontSize: 32,
+    fontFamily: "Quicksand_700Bold",
   },
 });
