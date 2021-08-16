@@ -4,10 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 
-import SliderApresentationOne from "./pages/SliderApresentationOne";
-import SliderApresentationTwo from "./pages/SliderApresentationTwo";
-import SliderApresentationThree from "./pages/SliderApresentationThree";
-import SliderApresentationFour from "./pages/SliderApresentationFour";
+import SlideApresentation from "./pages/SlideApresentation";
+import LoginPage from "./pages/LoginPage";
 
 function Routes() {
   return (
@@ -15,25 +13,16 @@ function Routes() {
       <Stack.Navigator>
         <Stack.Screen
           name="SliderOne"
-          component={SliderApresentationOne}
+          component={SlideApresentation}
           options={{ headerShown: false }}
           
         />
         <Stack.Screen
-          name="SliderTwo"
-          component={SliderApresentationTwo}
+          name="LoginPage"
+          component={LoginPage}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="SliderThree"
-          component={SliderApresentationThree}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SliderFour"
-          component={SliderApresentationFour}
-          options={{ headerShown: false }}
-        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
