@@ -1,5 +1,5 @@
 export default {
-  title: "Quicksand_300Light",
+  title: "Quicksand_700Bold",
   text: "Quicksand_500Medium",
-  text_light: "Quicksand_700Bold",
+  text_light: "Quicksand_300Light",
 };
