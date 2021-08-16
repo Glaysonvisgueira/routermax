@@ -13,6 +13,7 @@ export default function LoginPage({ navigation }) {
       colors={["#FFC1C1", "#fff"]}
       style={styles.container}
     >
+      
      
     </LinearGradient>
   );
