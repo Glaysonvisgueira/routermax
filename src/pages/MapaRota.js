@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
@@ -14,6 +15,10 @@ import {
 
 import colors from "../styles/colors";
 import fonts from "../styles/fonts";
+
+const origin = { latitude: -5.1025988, longitude: -42.7369204 };
+const destination = { latitude: -5.123543, longitude: -42.804945 };
+const GOOGLE_MAPS_APIKEY = "";
 
 export default function MapaRota() {
   const [currentRegion, setCurrentRegion] = useState(null);
@@ -53,11 +58,14 @@ export default function MapaRota() {
       userLocationPriority="high"
       showsMyLocationButton={true}
     >
-      <Marker
-        coordinate={{
-          latitude: -5.094016,
-          longitude: -42.768406,
-        }}
+      <MapViewDirections
+       lineDashPattern={[0]}
+        origin={origin}
+        destination={destination}
+        apikey={GOOGLE_MAPS_APIKEY}
+        mode="DRIVING"
+        strokeWidth={5}
+        strokeColor={colors.vermelho_forte}
       />
     </MapView>
   );

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -77,7 +78,7 @@ export default function MainMenu({ navigation }) {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonMenu} onPress={() => {}}>
+        <TouchableOpacity style={styles.buttonMenu} onPress={() => navigation.navigate('Entregas')}>
           <View style={{ flexDirection: "row" }}>
             <MaterialCommunityIcons
               name="truck-delivery"
@@ -93,7 +94,7 @@ export default function MainMenu({ navigation }) {
             color={colors.vermelho_forte}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonMenu} onPress={() => {}}>
+        <TouchableOpacity style={styles.buttonMenu} onPress={() => navigation.navigate('Sobre')}>
           <View
             style={{
               flexDirection: "row",
