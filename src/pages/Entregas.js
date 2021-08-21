@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState} from "react";
 import {
   Text,
   View,
@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import database from '../config/firebase';
+
 import { MaterialIcons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
@@ -15,6 +17,19 @@ import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
 export default function Entregas() {
+
+  const [pedidos, setPedidos] = useState([]);
+
+  useEffect(() => {
+    database.collection("pedidos").onSnapshot((query) => {
+      const list = []
+      query.forEach((doc) => {
+        list.push({...doc.data(), id: doc.id})
+      })
+      setPedidos(list)
+    })
+  }, []);
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.containerPedidos}>

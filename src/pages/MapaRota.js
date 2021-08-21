@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {  GOOGLE_MAPS_API_KEY } from '@env'
 import {
   Text,
   View,
@@ -18,7 +19,7 @@ import fonts from "../styles/fonts";
 
 const origin = { latitude: -5.1025988, longitude: -42.7369204 };
 const destination = { latitude: -5.123543, longitude: -42.804945 };
-const GOOGLE_MAPS_APIKEY = "";
+const GOOGLE_MAPS_APIKEY = GOOGLE_MAPS_API_KEY;
 
 export default function MapaRota() {
   const [currentRegion, setCurrentRegion] = useState(null);
