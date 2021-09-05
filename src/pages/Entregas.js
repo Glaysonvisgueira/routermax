@@ -21,15 +21,25 @@ export default function Entregas() {
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
-    database.collection("pedidos").onSnapshot((query) => {
+    loadPedidos();
+  }, []);
+
+  async function loadPedidos(){
+    const dadosPedidos = await database.collection("pedidos").onSnapshot((query) => {
       const list = []
       query.forEach((doc) => {
         list.push({...doc.data(), id: doc.id})
       })
       setPedidos(list)
+      //console.log(pedidos)
     })
-  }, []);
-  
+  }
+
+  if(!pedidos.length) return null;
+
+  console.log(pedidos)
+
+    
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.containerPedidos}>
@@ -127,6 +137,7 @@ const styles = StyleSheet.create({
     margin: 4,
     position: "relative",
     padding: 8,
+    flexDirection: 'row'
   },
   detalhesText: {
     flexDirection: "row",
