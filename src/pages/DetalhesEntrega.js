@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import database from "../config/firebase";
+
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
-export default function DetalhesEntrega({ navigation }) {
-  const [currentRegion, setCurrentRegion] = useState(null);
-
-  useEffect(() => {
-    setCurrentRegion({
-      latitude: "-5.091036",
-      longitude: "-42.736877",
-      latitudeDelta: 0.07,
-      longitudeDelta: 0.07,
-    });
-  }, []);
+export default function DetalhesEntrega({ route, navigation }) {
+  
+  const { pedido } = route.params;
+  
+  const currentRegion = {
+    latitude: parseFloat(pedido.coordenadas.latitude),
+    longitude: parseFloat(pedido.coordenadas.longitude),
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
 
   function navigateBack() {
     navigation.goBack();
@@ -26,7 +27,7 @@ export default function DetalhesEntrega({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.iconBack} onPress={navigateBack}>
-        <Feather name="arrow-left" size={30} color='#fff'/>
+        <Feather name="arrow-left" size={30} color="#fff" />
       </TouchableOpacity>
       <MapView
         style={styles.mapContainer}
@@ -34,8 +35,19 @@ export default function DetalhesEntrega({ navigation }) {
         showsUserLocation={false}
         showsCompass
         rotateEnabled={false}
-      ></MapView>
-           
+      >
+        <Marker          
+          pinColor={colors.vermelho_forte}
+          /* coordinate={
+            pedido.coordenadas
+          } */
+          coordinate={{ 
+            latitude: parseFloat(pedido.coordenadas.latitude), 
+            longitude: parseFloat(pedido.coordenadas.longitude)
+          }} 
+        />
+      </MapView>
+
       <View style={styles.containerDados}>
         <View style={styles.containerDadosPedido}>
           <View style={styles.containerTextHeader}>
@@ -72,7 +84,7 @@ export default function DetalhesEntrega({ navigation }) {
           </View>
           <View style={styles.containerTextHeader}>
             <Text style={styles.textDados}>Prazo entrega</Text>
-            <Text style={styles.textDados}>10/04/2021</Text>
+            <Text style={styles.textDados}>{pedido.cliente}</Text>
           </View>
           <View style={styles.containerTextHeader}>
             <Text style={styles.textDados}>Prazo entrega</Text>
@@ -107,10 +119,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.vermelho_forte,
   },
   mapContainer: {
-    height: '55%',
+    height: "55%",
     width: "100%",
     justifyContent: "center",
-    alignItems: "center",    
+    alignItems: "center",
   },
   iconBack: {
     position: "absolute",
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
-  },  
+  },
   containerTextHeader: {
     width: "100%",
     flexDirection: "row",
@@ -139,10 +151,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    zIndex: 1
+    zIndex: 1,
   },
-  containerDadosPedido: { 
-    flex: 1,   
+  containerDadosPedido: {
+    flex: 1,
     width: "100%",
     padding: 20,
     justifyContent: "center",

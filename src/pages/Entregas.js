@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -6,8 +6,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from "react-native";
-import database from '../config/firebase';
+import database from "../config/firebase";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -17,51 +18,71 @@ import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
 export default function Entregas({ navigation }) {
-
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
     loadPedidos();
   }, []);
 
-  async function loadPedidos(){
-    const dadosPedidos = await database.collection("pedidos").onSnapshot((query) => {
-      const list = []
-      query.forEach((doc) => {
-        list.push({...doc.data(), id: doc.id})
-      })
-      setPedidos(list)
-      //console.log(pedidos)
-    })
+  async function loadPedidos() {
+    const dadosPedidos = await database
+      .collection("pedidos")
+      .onSnapshot((query) => {
+        const list = [];
+        query.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setPedidos(list);
+        //console.log(pedidos)
+      });
   }
 
-  if(!pedidos.length) return null; 
+  if (!pedidos.length) return null;
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.containerPedidos}>
-      {pedidos.map((pedido, index) => (
-        <TouchableOpacity style={styles.pedido} onPress={() => navigation.navigate('DetalhesEntrega')}>          
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-          <View>
-            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Número do pedido:</Text>
-            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Cliente:</Text>
-            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Data da venda:</Text>
-            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Prazo limite:</Text>
-          </View>
-          <View>
-            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Número do pedido</Text>
-            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Cliente</Text>
-            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Data da venda</Text>
-            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Prazo limite</Text>
-          </View>
-        </View>        
-      </TouchableOpacity>
-      ))}
-        
-        
-       
-      </View>
+      <FlatList
+        style={styles.containerPedidos}
+        data={pedidos}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item: pedido }) => (
+          <TouchableOpacity
+            style={styles.pedido}
+            onPress={() => navigation.navigate("DetalhesEntrega", {
+              pedido: pedido              
+            })}
+          >
+            <View>
+              <Text style={{ textAlign: "left", fontFamily: fonts.text }}>
+                Número do pedido:
+              </Text>
+              <Text style={{ textAlign: "left", fontFamily: fonts.text }}>
+                Cliente:
+              </Text>
+              <Text style={{ textAlign: "left", fontFamily: fonts.text }}>
+                Data da venda:
+              </Text>
+              <Text style={{ textAlign: "left", fontFamily: fonts.text }}>
+                Prazo limite:
+              </Text>
+            </View>
+            <View>
+              <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
+                {pedido.numeroPedido}
+              </Text>
+              <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
+                {pedido.cliente}
+              </Text>
+              <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
+              a
+              </Text>
+              <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
+              a
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
     </SafeAreaView>
   );
 }
@@ -86,7 +107,9 @@ const styles = StyleSheet.create({
     margin: 4,
     position: "relative",
     padding: 8,
-    flexDirection: 'row'
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   detalhesText: {
     flexDirection: "row",
