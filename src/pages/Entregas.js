@@ -16,7 +16,7 @@ const { height, width } = Dimensions.get("window");
 import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
-export default function Entregas() {
+export default function Entregas({ navigation }) {
 
   const [pedidos, setPedidos] = useState([]);
 
@@ -35,83 +35,32 @@ export default function Entregas() {
     })
   }
 
-  if(!pedidos.length) return null;
+  if(!pedidos.length) return null; 
 
-  console.log(pedidos)
-
-    
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.containerPedidos}>
-        <TouchableOpacity style={styles.pedido}>          
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            <View>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Número do pedido:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Cliente:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Data da venda:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Prazo limite:</Text>
-            </View>
-            <View>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Número do pedido</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Cliente</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Data da venda</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Prazo limite</Text>
-            </View>
+      {pedidos.map((pedido, index) => (
+        <TouchableOpacity style={styles.pedido} onPress={() => navigation.navigate('DetalhesEntrega')}>          
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View>
+            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Número do pedido:</Text>
+            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Cliente:</Text>
+            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Data da venda:</Text>
+            <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Prazo limite:</Text>
           </View>
-          <View style={styles.detalhesText}>            
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={20}
-              color={colors.vermelho_forte}
-            />
+          <View>
+            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Número do pedido</Text>
+            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Cliente</Text>
+            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Data da venda</Text>
+            <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Prazo limite</Text>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.pedido}>          
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            <View>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Número do pedido:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Cliente:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Data da venda:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Prazo limite:</Text>
-            </View>
-            <View>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Número do pedido</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Cliente</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Data da venda</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Prazo limite</Text>
-            </View>
-          </View>
-          <View style={styles.detalhesText}>            
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={20}
-              color={colors.vermelho_forte}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.pedido}>          
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            <View>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Número do pedido:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Cliente:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Data da venda:</Text>
-              <Text style={{textAlign: 'left', fontFamily: fonts.text}}>Prazo limite:</Text>
-            </View>
-            <View>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Número do pedido</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Cliente</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Data da venda</Text>
-              <Text style={{textAlign: 'right', fontFamily: fonts.title}}>Prazo limite</Text>
-            </View>
-          </View>
-          <View style={styles.detalhesText}>            
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={20}
-              color={colors.vermelho_forte}
-            />
-          </View>
-        </TouchableOpacity>
+        </View>        
+      </TouchableOpacity>
+      ))}
+        
+        
+       
       </View>
     </SafeAreaView>
   );

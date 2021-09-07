@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     padding: 12,
     width: '100%',
     color: '#696969',
-    fontFamily: fonts.text_light,
+    fontFamily: fonts.text,
   },  
   containerImg: {
     width: 300,

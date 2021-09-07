@@ -4,7 +4,7 @@ import { WebView } from "react-native-webview";
 
 export default function GithubPage() {
   return (
-    <WebView style={styles.container} source={{ uri: "https://github.com/Glaysonvisgueira" }} />
+    <WebView style={styles.container} source={{ uri: "https://github.com/Glaysonvisgueira/routermax" }} />
   );
 }
 

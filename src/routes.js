@@ -10,6 +10,7 @@ import MainMenu from "./pages/MainMenu";
 import MapaRota from "./pages/MapaRota";
 import Sobre from "./pages/Sobre";
 import Entregas from "./pages/Entregas";
+import DetalhesEntrega from "./pages/DetalhesEntrega";
 import GithubPage from "./pages/GithubPage";
 import LinkedinPage from "./pages/LinkedinPage";
 
@@ -81,6 +82,14 @@ function Routes() {
             },
             headerTintColor: "#fff",
             headerStyle: { backgroundColor: colors.vermelho_forte },
+          }}
+        />
+        <Stack.Screen
+          name="DetalhesEntrega"
+          component={DetalhesEntrega}
+          options={{
+            headerShown: false,
+            animation: "slide_from_right",            
           }}
         />
         <Stack.Screen
