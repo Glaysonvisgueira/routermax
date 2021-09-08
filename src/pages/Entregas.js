@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
+import moment from "moment";
 import database from "../config/firebase";
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -40,7 +41,7 @@ export default function Entregas({ navigation }) {
   if (!pedidos.length) return null;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>      
       <FlatList
         style={styles.containerPedidos}
         data={pedidos}
@@ -71,13 +72,13 @@ export default function Entregas({ navigation }) {
                 {pedido.numeroPedido}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-                {pedido.cliente}
+                {pedido.cliente.toUpperCase()}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-              a
+              {moment(pedido.dataVenda).format("L")}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-              a
+              {moment(pedido.dataPrazo).format()}
               </Text>
             </View>
           </TouchableOpacity>
