@@ -7,11 +7,10 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  ScrollView,
 } from "react-native";
 import moment from "moment";
 import database from "../config/firebase";
-
-import { MaterialIcons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -20,6 +19,10 @@ import fonts from "../styles/fonts";
 
 export default function Entregas({ navigation }) {
   const [pedidos, setPedidos] = useState([]);
+  const [todosPedidos, setTodosPedidos] = useState([]);
+  const [pedidosAtrasados, setPedidosAtrasados] = useState([]);
+  const [pedidosDoDia, setPedidosDoDia] = useState([]);
+  const [pedidosAcimaTresDias, setPedidosAcimaTresDias] = useState([]);
 
   useEffect(() => {
     loadPedidos();
@@ -40,8 +43,28 @@ export default function Entregas({ navigation }) {
 
   if (!pedidos.length) return null;
 
+  let options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
   return (
-    <SafeAreaView style={styles.container}>      
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.containerFilter}
+      >
+        <TouchableOpacity>
+          <Text style={styles.filteredButton}>Todos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.filterButton}>Atrasado</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.filterButton}>Do dia</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.filterButton}>Acima três dias</Text>
+        </TouchableOpacity>
+      </ScrollView>
       <FlatList
         style={styles.containerPedidos}
         data={pedidos}
@@ -49,9 +72,11 @@ export default function Entregas({ navigation }) {
         renderItem={({ item: pedido }) => (
           <TouchableOpacity
             style={styles.pedido}
-            onPress={() => navigation.navigate("DetalhesEntrega", {
-              pedido: pedido              
-            })}
+            onPress={() =>
+              navigation.navigate("DetalhesEntrega", {
+                pedido: pedido,
+              })
+            }
           >
             <View>
               <Text style={{ textAlign: "left", fontFamily: fonts.text }}>
@@ -75,10 +100,10 @@ export default function Entregas({ navigation }) {
                 {pedido.cliente.toUpperCase()}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-              {moment(pedido.dataVenda).format("L")}
+                {pedido.dataVenda.toDate().toLocaleDateString('pt-BR', options)}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-              {moment(pedido.dataPrazo).format()}
+              {pedido.dataPrazo.toDate().toLocaleDateString('pt-BR', options)}
               </Text>
             </View>
           </TouchableOpacity>
@@ -117,5 +142,32 @@ const styles = StyleSheet.create({
     margin: 4,
     justifyContent: "center",
     alignItems: "center",
+  },
+  containerFilter: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginVertical: 20,
+    marginRight: 20,
+  },
+  filterButton: {
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    backgroundColor: "#f2f2f2",
+    fontSize: 16,
+    fontFamily: fonts.text,
+    marginHorizontal: 3,
+    color: colors.preto_fraco,
+  },
+  filteredButton: {
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    backgroundColor: "#cfcfcf",
+    fontSize: 16,
+    fontFamily: fonts.title,
+    marginHorizontal: 3,
+    color: colors.preto_forte,
   },
 });

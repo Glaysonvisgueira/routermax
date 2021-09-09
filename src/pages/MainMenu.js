@@ -21,7 +21,7 @@ export default function MainMenu({ navigation }) {
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={["#cb3838", "#cb3838"]}
+      colors={["#cb3838", "#d15252", "#db6e6e"]}
       style={styles.container}
     >
       <View style={styles.containerButtonsMenu}>

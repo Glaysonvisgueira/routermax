@@ -21,8 +21,8 @@ export default function DetalhesEntrega({ route, navigation }) {
   };
 
   function enviarWhatsapp() {
-    const mensagem = `Olá ${pedido.cliente}! Tudo bem?`;
-    Linking.openURL(`whatsapp://send?phone=55086999277101&text=${mensagem}`);
+    const mensagem = `Olá ${pedido.cliente.toUpperCase()}! Tudo bem? Iremos entregar seu pedido.`;
+    Linking.openURL(`whatsapp://send?phone=550${pedido.contato}&text=${mensagem}`);
   }
 
   function ligarCliente() {
@@ -39,9 +39,8 @@ export default function DetalhesEntrega({ route, navigation }) {
       <TouchableOpacity
         style={styles.iconBack}
         onPress={navigateBack}
-        animated={true}
       >
-        <Feather name="arrow-left" size={30} color="#fff" />
+        <Feather name="arrow-left" size={30} color={colors.preto_forte} />
       </TouchableOpacity>
       <MapView
         style={styles.mapContainer}
@@ -137,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#fff",
   },
   hr: {
     width: "100%",
@@ -156,12 +155,21 @@ const styles = StyleSheet.create({
     top: 40,
     left: 20,
     zIndex: 1,
-    backgroundColor: colors.vermelho_forte,
+    backgroundColor: '#fff',
     width: 40,
     height: 40,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 10,
+  },
+  shadowOpacity: 0.53,
+  shadowRadius: 13.97,
+
+  elevation: 21,
   },
   containerTextHeader: {
     width: "100%",
@@ -179,8 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     zIndex: 1,
-    borderTopColor: colors.preto_fraco,
-    borderTopWidth: 4,
+    
   },
   containerDadosPedido: {
     flex: 1,
@@ -192,7 +199,7 @@ const styles = StyleSheet.create({
   textDados: {
     fontFamily: fonts.title,
     fontSize: 14,
-    color: colors.preto_fraco,
+    color: colors.preto_fraco,    
   },
   containerBotoesContatos: {
     flexDirection: "row",
