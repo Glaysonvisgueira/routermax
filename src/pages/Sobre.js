@@ -88,6 +88,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginHorizontal: 4,
     padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 5,
   },
   containerOptionsContact: {
     flexDirection: 'row',

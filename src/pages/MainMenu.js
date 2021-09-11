@@ -3,16 +3,18 @@ import {
   Text,
   View,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-
+import LottieView from 'lottie-react-native';
 
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import locationAnimation from '../assets/lotties/location.json';
+
 
 import colors from "../styles/colors";
 import fonts from "../styles/fonts";
@@ -21,9 +23,15 @@ export default function MainMenu({ navigation }) {
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={["#cb3838", "#d15252", "#db6e6e"]}
+      colors={["#fff", "#fff", "#fff"]}
       style={styles.container}
     >
+      <LottieView 
+                source={locationAnimation}
+                autoPlay
+                loop
+                style={styles.animation}
+           />
       <View style={styles.containerButtonsMenu}>
 
         <TouchableOpacity style={styles.buttonMenu} onPress={() => navigation.navigate('MapaRota')}>
@@ -133,10 +141,17 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.vermelho_forte,
+    backgroundColor: '#fff',
     padding: 30,
   },
-  linerGradientContainer: {
+  animation: {
+    backgroundColor: 'transparent',
+    width: 200,
+    height: 200,
+    marginBottom: 20
+},
+ 
+linerGradientContainer: {
     flex: 1,
     width: "100%",
     justifyContent: "center",
@@ -181,6 +196,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginTop: 15,
     borderRadius: 100,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 5,
   },
   icon: {
     marginHorizontal: 20,

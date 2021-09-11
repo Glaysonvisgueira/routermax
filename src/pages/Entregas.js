@@ -8,9 +8,11 @@ import {
   Dimensions,
   FlatList,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
-import moment from "moment";
 import database from "../config/firebase";
+
+import Loading from '../components/Loading';
 
 const { height, width } = Dimensions.get("window");
 
@@ -18,11 +20,49 @@ import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
 export default function Entregas({ navigation }) {
+  
+  const [loading, setLoading] = useState(true);
   const [pedidos, setPedidos] = useState([]);
-  const [todosPedidos, setTodosPedidos] = useState([]);
+
+
+  //Estados dos botões de filtro
+  const [isTodosActive, setIsTodosActive] = useState(true);
+  const [isAtrasadossActive, setIsAtrasadossActive] = useState(false);
+  const [isEmDiasActive, setIsEmDiasActive] = useState(false);
+  const [isAcimaTresDiasActive, setIsAcimaTresDiasActive] = useState(false);
+
+  
   const [pedidosAtrasados, setPedidosAtrasados] = useState([]);
   const [pedidosDoDia, setPedidosDoDia] = useState([]);
   const [pedidosAcimaTresDias, setPedidosAcimaTresDias] = useState([]);
+
+  function filtrarTodasEntregas() {
+    setIsEmDiasActive(false);
+    setIsAcimaTresDiasActive(false);
+    setIsAtrasadossActive(false);
+    setIsTodosActive(true);
+  }
+
+  function filtrarEntregasAtrasadas() {
+    setIsTodosActive(false);
+    setIsEmDiasActive(false);
+    setIsAcimaTresDiasActive(false);
+    setIsAtrasadossActive(true);
+  }
+
+  function filtrarEntregasEmDias() {
+    setIsTodosActive(false);
+    setIsAcimaTresDiasActive(false);
+    setIsAtrasadossActive(false);
+    setIsEmDiasActive(true);
+  }
+
+  function filtrarEntregasAcimaTresDias() {
+    setIsTodosActive(false);
+    setIsEmDiasActive(false);
+    setIsAtrasadossActive(false);
+    setIsAcimaTresDiasActive(true);
+  }
 
   useEffect(() => {
     loadPedidos();
@@ -41,29 +81,89 @@ export default function Entregas({ navigation }) {
       });
   }
 
-  if (!pedidos.length) return null;
+  async function carregar() {
+    const pedidosRef = database.collection('pedidos');
+    const query = await pedidosRef.where('bairro', '==', 'Colorado').get();
+    if (query.empty) {
+      console.log('No matching documents.');
+      return;
+    }
+    const list = [];
+    query.forEach(doc => {
+      list.push({ ...doc.data(), id: doc.id });
+    });
+    setPedidos(list);
+  }
 
-  let options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
+
+  if (!pedidos.length && loading ) return (
+    <Loading />
+)
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
+        contentContainerStyle={styles.scrollView}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerFilter}
       >
-        <TouchableOpacity>
-          <Text style={styles.filteredButton}>Todos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.filterButton}>Atrasado</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.filterButton}>Do dia</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.filterButton}>Acima três dias</Text>
-        </TouchableOpacity>
+        <TouchableWithoutFeedback
+          style={{ marginHorizontal: 2 }}
+          onPress={filtrarTodasEntregas}
+        >
+          <Text
+            style={
+              isTodosActive === true
+                ? styles.filteredButton
+                : styles.textFilterButton
+            }
+          >
+            Todos ({pedidos.length})
+          </Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          style={{ marginHorizontal: 2 }}
+          onPress={filtrarEntregasAtrasadas}
+        >
+          <Text
+            style={
+              isAtrasadossActive === true
+                ? styles.filteredButton
+                : styles.textFilterButton
+            }
+          >
+            Atrasados ({pedidosAtrasados.length})
+          </Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          style={{ marginHorizontal: 2 }}
+          onPress={filtrarEntregasEmDias}
+        >
+          <Text
+            style={
+              isEmDiasActive === true
+                ? styles.filteredButton
+                : styles.textFilterButton
+            }
+          >
+            Do dia ({pedidosDoDia.length})
+          </Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          style={{ marginHorizontal: 2 }}
+          onPress={filtrarEntregasAcimaTresDias}
+        >
+          <Text
+            style={
+              isAcimaTresDiasActive === true
+                ? styles.filteredButton
+                : styles.textFilterButton
+            }
+          >
+            Acima de três dias ({pedidosAcimaTresDias.length})
+          </Text>
+        </TouchableWithoutFeedback>
       </ScrollView>
       <FlatList
         style={styles.containerPedidos}
@@ -100,10 +200,10 @@ export default function Entregas({ navigation }) {
                 {pedido.cliente.toUpperCase()}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-                {pedido.dataVenda.toDate().toLocaleDateString('pt-BR', options)}
+                {pedido.dataVenda.toDate().toLocaleDateString("pt-BR")}
               </Text>
               <Text style={{ textAlign: "right", fontFamily: fonts.title }}>
-              {pedido.dataPrazo.toDate().toLocaleDateString('pt-BR', options)}
+                {pedido.dataPrazo.toDate().toLocaleDateString("pt-BR")}
               </Text>
             </View>
           </TouchableOpacity>
@@ -143,31 +243,40 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  containerFilter: {
+  scrollView: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginVertical: 20,
-    marginRight: 20,
+    marginVertical: 10,
   },
-  filterButton: {
-    borderRadius: 20,
-    paddingVertical: 5,
+  textFilterButton: {
     paddingHorizontal: 15,
-    backgroundColor: "#f2f2f2",
-    fontSize: 16,
-    fontFamily: fonts.text,
-    marginHorizontal: 3,
-    color: colors.preto_fraco,
+    paddingVertical: 4,
+    borderRadius: 50,
+    backgroundColor: "#F2F2F2",
+    color: "#363636",
+    textAlign: "center",
+    margin: 4,
+    fontSize: 18,
   },
   filteredButton: {
-    borderRadius: 20,
-    paddingVertical: 5,
+    backgroundColor: "#cb3838",
     paddingHorizontal: 15,
-    backgroundColor: "#cfcfcf",
-    fontSize: 16,
-    fontFamily: fonts.title,
-    marginHorizontal: 3,
-    color: colors.preto_forte,
+    paddingVertical: 4,
+    borderRadius: 50,
+    color: "#fff",
+    textAlign: "center",
+    margin: 4,
+    fontSize: 18,
+  },
+  botaoAlerta: {
+    backgroundColor: "#cb3838",
+    width: 80,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textoBotao: {
+    color: "#fff",
   },
 });

@@ -140,8 +140,8 @@ const styles = StyleSheet.create({
   },
   hr: {
     width: "100%",
-    borderBottomColor: colors.preto_fraco,
-    borderBottomWidth: 2,
+    borderBottomColor: colors.cinza_fraco,
+    borderBottomWidth: 1,
     marginVertical: 10,
   },
   mapContainer: {
@@ -162,14 +162,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
-  shadowOffset: {
-    width: 0,
-    height: 10,
-  },
-  shadowOpacity: 0.53,
-  shadowRadius: 13.97,
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.53,
+    shadowRadius: 13.97,
 
-  elevation: 21,
+    elevation: 21,
   },
   containerTextHeader: {
     width: "100%",
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   ligarBotao: {
     height: 50,
-    width: "45%",
+    width: "47%",
     backgroundColor: "#3348b5",
     margin: 3,
     borderRadius: 4,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
   whatsappBotao: {
     height: 50,
-    width: "49%",
+    width: "47%",
     backgroundColor: "#24a33f",
     margin: 3,
     borderRadius: 4,
