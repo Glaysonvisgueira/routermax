@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import database from "../config/firebase";
 
-import Loading from '../components/Loading';
+import Loading from "../components/Loading";
 
 const { height, width } = Dimensions.get("window");
 
@@ -20,10 +20,8 @@ import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
 export default function Entregas({ navigation }) {
-  
   const [loading, setLoading] = useState(true);
   const [pedidos, setPedidos] = useState([]);
-
 
   //Estados dos botões de filtro
   const [isTodosActive, setIsTodosActive] = useState(true);
@@ -31,7 +29,6 @@ export default function Entregas({ navigation }) {
   const [isEmDiasActive, setIsEmDiasActive] = useState(false);
   const [isAcimaTresDiasActive, setIsAcimaTresDiasActive] = useState(false);
 
-  
   const [pedidosAtrasados, setPedidosAtrasados] = useState([]);
   const [pedidosDoDia, setPedidosDoDia] = useState([]);
   const [pedidosAcimaTresDias, setPedidosAcimaTresDias] = useState([]);
@@ -65,7 +62,7 @@ export default function Entregas({ navigation }) {
   }
 
   useEffect(() => {
-    loadPedidos();
+    carregar();
   }, []);
 
   async function loadPedidos() {
@@ -82,24 +79,21 @@ export default function Entregas({ navigation }) {
   }
 
   async function carregar() {
-    const pedidosRef = database.collection('pedidos');
-    const query = await pedidosRef.where('bairro', '==', 'Colorado').get();
-    if (query.empty) {
-      console.log('No matching documents.');
-      return;
-    }
-    const list = [];
-    query.forEach(doc => {
-      list.push({ ...doc.data(), id: doc.id });
-    });
-    setPedidos(list);
+    const pedidosRef = database.collection("pedidos");
+    const snapshot = await pedidosRef.where('bairro', '==', "Colorado").get().then((querySnapshot)=>{
+      querySnapshot.forEach(snapshot => {
+        let data = snapshot.data();
+        console.log(data);
+      })
+    })
   }
 
+    
+  
+  
+  
 
-
-  if (!pedidos.length && loading ) return (
-    <Loading />
-)
+  if (!pedidos.length && loading) return <Loading />;
 
   return (
     <SafeAreaView style={styles.container}>
