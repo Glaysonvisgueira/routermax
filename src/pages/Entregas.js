@@ -62,30 +62,32 @@ export default function Entregas({ navigation }) {
   }
 
   useEffect(() => {
-    carregar();
+    loadPedidos();
+    //console.log(pedidos)
+   
   }, []);
 
   async function loadPedidos() {
     const dadosPedidos = await database
-      .collection("pedidos")
+      .collection("pedidos").orderBy('dataPrazo', 'asc')  
       .onSnapshot((query) => {
         const list = [];
         query.forEach((doc) => {
           list.push({ ...doc.data(), id: doc.id });
         });
-        setPedidos(list);
-        //console.log(pedidos)
+        setPedidos(list);        
       });
   }
 
   async function carregar() {
-    const pedidosRef = database.collection("pedidos");
-    const snapshot = await pedidosRef.where('bairro', '==', "Colorado").get().then((querySnapshot)=>{
-      querySnapshot.forEach(snapshot => {
-        let data = snapshot.data();
-        console.log(data);
-      })
-    })
+    const citiesRef = database.collection('pedidos');
+    const snapshot = await citiesRef.where('bairro', '==', 'Colorado').get();
+    const list = [];
+    snapshot.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setPedidos(list);   
+   
   }
 
     
