@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { LogBox } from 'react-native'; 
 import React from "react";
 import AppLoading from "expo-app-loading";
 import {
@@ -16,6 +17,10 @@ export default function App() {
     Quicksand_500Medium,
     Quicksand_300Light,
   });
+
+  
+
+LogBox.ignoreLogs(['Setting a timer']);
 
   if (!fontsLoaded) {
     return <AppLoading />;

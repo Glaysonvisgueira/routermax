@@ -21,6 +21,7 @@ import truckImg from "../assets/delivery-truck.png";
 const { width, height } = Dimensions.get("window");
 
 export default function SlideApresentation({ navigation }) {
+
   return (
     <LinearGradient
       // Background Linear Gradient

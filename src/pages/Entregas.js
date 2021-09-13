@@ -62,38 +62,35 @@ export default function Entregas({ navigation }) {
   }
 
   useEffect(() => {
-    loadPedidos();
+    loadPedidosPendentesSemRota();
     //console.log(pedidos)
-   
   }, []);
 
   async function loadPedidos() {
     const dadosPedidos = await database
-      .collection("pedidos").orderBy('dataPrazo', 'asc')  
+      .collection("pedidos")
+      .orderBy("dataPrazo", "asc")
       .onSnapshot((query) => {
         const list = [];
         query.forEach((doc) => {
           list.push({ ...doc.data(), id: doc.id });
         });
-        setPedidos(list);        
+        setPedidos(list);
       });
   }
 
-  async function carregar() {
-    const citiesRef = database.collection('pedidos');
-    const snapshot = await citiesRef.where('bairro', '==', 'Colorado').get();
-    const list = [];
-    snapshot.forEach((doc) => {
-          list.push({ ...doc.data(), id: doc.id });
-        });
-        setPedidos(list);   
-   
+  async function loadPedidosPendentesSemRota() {
+    const pedidosRef = database.collection("pedidos");
+    const query = await pedidosRef
+      .where("status.situacaoPedido", "==", "pendente")
+      .where("rotaInfo.possuiRota", "==", false)
+      .get();
+    const listaPedidos = [];
+    query.forEach((doc) => {
+      listaPedidos.push({ ...doc.data(), id: doc.id });
+    });
+    setPedidos(listaPedidos);
   }
-
-    
-  
-  
-  
 
   if (!pedidos.length && loading) return <Loading />;
 
