@@ -66,19 +66,6 @@ export default function Entregas({ navigation }) {
     //console.log(pedidos)
   }, []);
 
-  async function loadPedidos() {
-    const dadosPedidos = await database
-      .collection("pedidos")
-      .orderBy("dataPrazo", "asc")
-      .onSnapshot((query) => {
-        const list = [];
-        query.forEach((doc) => {
-          list.push({ ...doc.data(), id: doc.id });
-        });
-        setPedidos(list);
-      });
-  }
-
   async function loadPedidosPendentesSemRota() {
     const pedidosRef = database.collection("pedidos");
     const query = await pedidosRef
