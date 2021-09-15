@@ -21,6 +21,11 @@ export default function Login({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
+  /* const userData = {
+    userName: user,
+    userPassword: password
+  } */
+
   async function handleLogin() {
     const usersRef = await database.collection("users");
     const findUser = await usersRef
@@ -33,9 +38,10 @@ export default function Login({ navigation }) {
         "Verifique as informações de usuário e senha informados.",
         [{ text: "OK" }]
       );
-    } else {      
-      await AsyncStorage.setItem("@routermax:user", 'usuário');
-      navigation.navigate('MainMenu')
+    } else {     
+        await AsyncStorage.setItem("@routermax:user", user);
+      
+      navigation.navigate("MainMenu");
     }
   }
 
