@@ -46,7 +46,6 @@ export default function Login({ navigation }) {
     const jsonValue = JSON.stringify(userData)
     await AsyncStorage.setItem('@routermax:user', jsonValue)
     navigation.navigate("MainMenu");
-
   }
 
   /* async function handleLogin() {
