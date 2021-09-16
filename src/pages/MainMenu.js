@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   Image,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -23,17 +23,22 @@ import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
 export default function MainMenu({ navigation }) {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState("");
 
   useEffect(() => {
     getUserData();
-    console.log(userData);
   }, []);
 
   async function getUserData() {
     const jsonValue = await AsyncStorage.getItem("@routermax:user");
     setUserData(JSON.parse(jsonValue));
   }
+
+  if (!userData.length) {
+    return null;
+  }
+
+  console.log(userData);
 
   return (
     <View style={styles.container}>

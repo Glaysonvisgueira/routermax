@@ -21,13 +21,10 @@ export default function Login({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
-  /* const userData = {
-    userName: user,
-    userPassword: password
-  } */
+  const [userData, setUserData] = useState([]);
 
   async function handleLogin() {
-    const usersRef = await database.collection("users");
+    const usersRef = database.collection("users");
     const findUser = await usersRef
       .where("nome", "==", user)
       .where("senha", "==", password)
@@ -38,12 +35,45 @@ export default function Login({ navigation }) {
         "Verifique as informações de usuário e senha informados.",
         [{ text: "OK" }]
       );
-    } else {     
+      return;
+    }
+    const dadosUsuario = [];
+    findUser.forEach((doc) => {
+      /* console.log(doc.id, "=>", doc.data()); */
+      dadosUsuario.push({ ...doc.data(), id: doc.id });
+    });
+    setUserData(dadosUsuario);
+    const jsonValue = JSON.stringify(userData)
+    await AsyncStorage.setItem('@routermax:user', jsonValue)
+    navigation.navigate("MainMenu");
+
+  }
+
+  /* async function handleLogin() {
+    const usersRef = await database.collection("users");
+    const findUser = await usersRef
+      .where("nome", "==", user)
+      .where("senha", "==", password)
+      .get();
+      
+    if (findUser.empty) {
+      Alert.alert(
+        "Usuário/senha incorreto.",
+        "Verifique as informações de usuário e senha informados.",
+        [{ text: "OK" }]
+      );
+    } else { 
+      const listaPedidos = [];
+      findUser.forEach((doc) => {
+        listaPedidos.push({ ...doc.data(), id: doc.id });
+    });    
+    b(listaPedidos);
+    console.log(a)
         await AsyncStorage.setItem("@routermax:user", user);
       
       navigation.navigate("MainMenu");
     }
-  }
+  } */
 
   return (
     <SafeAreaView style={styles.container}>
