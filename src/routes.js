@@ -21,22 +21,7 @@ function Routes() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="SliderOne"
-          component={SlideApresentation}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="LoginPage"
-          component={LoginPage}
-          options={{ headerShown: false, animation: "slide_from_right" }}
-        />
-        <Stack.Screen
-          name="MainMenu"
-          component={MainMenu}
-          options={{ headerShown: false, animation: "fade" }}
-        />
-        <Stack.Screen
+      <Stack.Screen
           name="MapaRota"
           component={MapaRota}
           options={{
@@ -52,6 +37,22 @@ function Routes() {
             headerStyle: { backgroundColor: colors.vermelho_forte },
           }}
         />
+        <Stack.Screen
+          name="SliderOne"
+          component={SlideApresentation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LoginPage"
+          component={LoginPage}
+          options={{ headerShown: false, animation: "slide_from_right" }}
+        />
+        <Stack.Screen
+          name="MainMenu"
+          component={MainMenu}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        
         <Stack.Screen
           name="Sobre"
           component={Sobre}

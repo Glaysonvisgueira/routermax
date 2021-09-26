@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import Animated from "react-native-reanimated";
-import BottomSheet from "reanimated-bottom-sheet";
+import Modal from "react-native-modal";
+import { Ionicons } from "@expo/vector-icons";
+
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
@@ -19,63 +14,80 @@ import database from "../config/firebase";
 import colors from "../styles/colors";
 import fonts from "../styles/fonts";
 
+/*
 const origin = { latitude: -5.1025988, longitude: -42.7369204 };
-const destination = { latitude: -5.123543, longitude: -42.804945 };
+const destination = { latitude: -5.123543, longitude: -42.804945 }; 
+*/
 
 export default function MapaRota() {
   const [currentRegion, setCurrentRegion] = useState(null);
   const [pedidos, setPedidos] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [dadosDoPedido, setDadosDoPedido] = useState([]);
 
-  function bottomModalContent() {
-    return (
-      <View style={styles.containerModal}>
-        <View style={styles.iconHideModal}></View>
-        <View style={styles.containerDadosEntrega}>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>Número do pedido:</Text>
-            <Text style={styles.textoDadosDireita}>1</Text>
-          </View>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>Cliente:</Text>
-            <Text style={styles.textoDadosDireita}>Glayson</Text>
-          </View>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>Endereço:</Text>
-            <Text style={styles.textoDadosDireita}>
-              Rua desembargador vidal de freitas
-            </Text>
-          </View>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>Complemento:</Text>
-            <Text style={styles.textoDadosDireita}>Glayson</Text>
-          </View>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>Bairro:</Text>
-            <Text style={styles.textoDadosDireita}>Glayson</Text>
-          </View>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>Cidade:</Text>
-            <Text style={styles.textoDadosDireita}>Glayson</Text>
-          </View>
-          <View style={styles.containerTextoDados}>
-            <Text style={styles.textoDadosEsquerda}>UF:</Text>
-            <Text style={styles.textoDadosDireita}>Glayson</Text>
-          </View>
-        </View>
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
-        <View style={styles.containerBotoesAcoes}>
-          <TouchableOpacity style={styles.botaoJustificarEntrega}>
-            <Text style={styles.textoBotao}>JUSTIFICAR</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.botaoConcluirEntrega}>
-            <Text style={styles.textoBotao}>CONCLUIR</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+  async function concluirEntrega() {
+    Alert.alert(
+      "Deseja concluir a entrega?",
+      `Número do pedido: ${dadosDoPedido.numeroPedido}\nCliente: ${dadosDoPedido.cliente}`,
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Sim",
+          onPress: () => {
+            const pedidoRef = database
+              .collection("pedidos")
+              .doc(dadosDoPedido.id);
+            const response = pedidoRef.set(
+              {
+                status: { situacaoPedido: "concluido" },
+              },
+              { merge: true }
+            );
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
     );
   }
 
-  const sheetRef = React.useRef(null);
+  async function justificarEntrega() {
+    Alert.alert(
+      "Deseja justificar a entrega?",
+      `Número do pedido: ${dadosDoPedido.numeroPedido}\nCliente: ${dadosDoPedido.cliente}`,
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Sim",
+          onPress: () => {
+            const pedidoRef = database
+              .collection("pedidos")
+              .doc(dadosDoPedido.id);
+            const response = pedidoRef.set(
+              {
+                status: { situacaoPedido: "justificada" },
+              },
+              { merge: true }
+            );
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  }
 
   function navigateBack() {
     navigation.goBack();
@@ -108,8 +120,8 @@ export default function MapaRota() {
       setCurrentRegion({
         latitude,
         longitude,
-        latitudeDelta: 0.07,
-        longitudeDelta: 0.07,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.09,
       });
     }
   }
@@ -125,33 +137,102 @@ export default function MapaRota() {
       <MapView
         style={styles.mapContainer}
         initialRegion={currentRegion}
-        showsUserLocation={true}
-        userLocationPriority="high"
+        showsUserLocation={false}
+        /* userLocationPriority="high"
         showsMyLocationButton={true}
-        enableHighAccuracy={true}
+        enableHighAccuracy={true} */
       >
         {pedidos.map((pedido, index) => (
           <Marker
-            onPress={() => sheetRef.current.snapTo(0)}
+            /* onPress={setDadosDoPedido(pedido)} */
             key={pedido.id}
-            pinColor="#ad1409"
-            /* coordinate={
-            pedido.coordenadas
-          } */
+            /*  pinColor="#ad1409" */
+            pinColor={
+              pedido.status.situacaoPedido === "pendente"
+                ? "#ad1409"
+                : "#065c1c"
+            }
             coordinate={{
               latitude: parseFloat(pedido.coordenadas.latitude),
               longitude: parseFloat(pedido.coordenadas.longitude),
             }}
+            onPress={() => {
+              setModalVisible(true);
+              setDadosDoPedido(pedido);
+            }}
           />
         ))}
       </MapView>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={[250, 0]}
-        initialSnap={1}
-        borderRadius={10}
-        renderHeader={bottomModalContent}
-      />
+      <Modal
+        isVisible={isModalVisible}
+        onSwipeComplete={() => setModalVisible(false)}
+        swipeDirection="down"
+        coverScreen={false}
+        style={{ margin: 0, justifyContent: "flex-end" }}
+        animationIn={"slideInUp"}
+        hasBackdrop={true}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.containerModal}>
+          <TouchableOpacity
+            title="Hide modal"
+            onPress={toggleModal}
+            style={{ position: "absolute", top: 10, right: 10 }}
+          >
+            <Ionicons name="close" size={30} color={colors.vermelho_forte} />
+          </TouchableOpacity>
+          <View style={styles.containerDadosEntrega}>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>Número do pedido:</Text>
+              <Text styles={styles.textoDados}>
+                {dadosDoPedido.numeroPedido}
+              </Text>
+            </View>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>Cliente:</Text>
+              <Text styles={styles.textoDados}>{dadosDoPedido.cliente}</Text>
+            </View>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>Endereço:</Text>
+              <Text styles={styles.textoDados}>{dadosDoPedido.endereco}</Text>
+            </View>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>Complemento:</Text>
+              <Text styles={styles.textoDados}>
+                {dadosDoPedido.complemento}
+              </Text>
+            </View>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>Bairro:</Text>
+              <Text styles={styles.textoDados}>{dadosDoPedido.bairro}</Text>
+            </View>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>Cidade:</Text>
+              <Text styles={styles.textoDados}>{dadosDoPedido.cidade}</Text>
+            </View>
+            <View style={styles.containerTextDados}>
+              <Text styles={styles.textoDados}>UF:</Text>
+              <Text styles={styles.textoDados}>{dadosDoPedido.uf}</Text>
+            </View>
+          </View>
+          <View style={styles.containerBotoesAcoes}>
+            <TouchableOpacity
+              style={styles.botaoJustificarEntrega}
+              onPress={justificarEntrega}
+            >
+              <Text style={styles.textoBotao}>JUSTIFICAR</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botaoConcluirEntrega}
+              onPress={concluirEntrega}
+            >
+              <Text style={styles.textoBotao}>CONCLUIR</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
@@ -166,7 +247,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     width: "100%",
-    height: 250,
+    height: 300,
     backgroundColor: "#fff",
     padding: 15,
     shadowColor: "#000",
@@ -209,6 +290,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 14,
+    fontFamily: fonts.title,
   },
   containerDadosEntrega: {
     paddingVertical: 20,
@@ -216,29 +298,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  containerTextoDados: {
-    width: "100%",
+  containerTextDados: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    width: "100%",
     marginVertical: 2,
   },
-  textoDadosEsquerda: {
-    fontSize: 12,
-    color: colors.preto_forte,
-    fontWeight: "bold",
-  },
-  textoDadosDireita: {
-    fontSize: 12,
-    color: colors.preto_fraco,
-  },
-  iconHideModal: {
-    width: 60,
-    height: 5,
-    backgroundColor: "#dbdbdb",
-    position: "absolute",
-    top: 8,
-    borderRadius: 40,
+  textoDados: {
+    fontFamily: fonts.text,
   },
 });
 

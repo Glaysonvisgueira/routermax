@@ -70,7 +70,7 @@ export default function MainMenu({ navigation }) {
       </View>
       <View style={styles.containerBotoes}>
         <View style={styles.containerRowBotoes}>
-          <TouchableOpacity style={styles.botaoOpcao}>
+          <TouchableOpacity style={styles.botaoOpcao} onPress={() => navigation.navigate("MapaRota")}>
             <View
               style={{
                 width: 50,
