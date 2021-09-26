@@ -3,7 +3,6 @@ import { GOOGLE_MAPS_API_KEY } from "@env";
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Modal from "react-native-modal";
-import { Ionicons } from "@expo/vector-icons";
 
 import {
   requestForegroundPermissionsAsync,
@@ -24,6 +23,13 @@ export default function MapaRota() {
   const [pedidos, setPedidos] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [dadosDoPedido, setDadosDoPedido] = useState([]);
+  const [pedidosEntregues, setPedidosEntregues] = useState([]);
+  const [pedidosJustificados, setPedidosJustificados] = useState([]);
+  
+    useEffect(() => {
+      loadPedidos();
+      loadInitialPosition();    
+    }, [pedidosEntregues]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -51,6 +57,7 @@ export default function MapaRota() {
               },
               { merge: true }
             );
+            setPedidosEntregues([...pedidosEntregues, dadosDoPedido]);            
           },
           style: "destructive",
         },
@@ -81,22 +88,14 @@ export default function MapaRota() {
               },
               { merge: true }
             );
+            setPedidosJustificados([...pedidosJustificados, dadosDoPedido]); 
           },
           style: "destructive",
         },
       ],
       { cancelable: true }
     );
-  }
-
-  function navigateBack() {
-    navigation.goBack();
-  }
-
-  useEffect(() => {
-    loadPedidos();
-    loadInitialPosition();
-  }, []);
+  } 
 
   async function loadPedidos() {
     const dadosPedidos = await database
@@ -150,7 +149,7 @@ export default function MapaRota() {
             pinColor={
               pedido.status.situacaoPedido === "pendente"
                 ? "#ad1409"
-                : "#065c1c"
+                : '#065c1c'
             }
             coordinate={{
               latitude: parseFloat(pedido.coordenadas.latitude),
@@ -176,13 +175,16 @@ export default function MapaRota() {
         }}
       >
         <View style={styles.containerModal}>
-          <TouchableOpacity
-            title="Hide modal"
-            onPress={toggleModal}
-            style={{ position: "absolute", top: 10, right: 10 }}
-          >
-            <Ionicons name="close" size={30} color={colors.vermelho_forte} />
-          </TouchableOpacity>
+          <View
+            style={{
+              position: "absolute",
+              top: 10,
+              width: 80,
+              height: 6,
+              backgroundColor: "#cfcfcf",
+              borderRadius: 10,
+            }}
+          ></View>
           <View style={styles.containerDadosEntrega}>
             <View style={styles.containerTextDados}>
               <Text styles={styles.textoDados}>Número do pedido:</Text>
