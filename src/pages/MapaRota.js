@@ -291,6 +291,8 @@ export default function MapaRota() {
   );
 }
 
+//teste for commit
+
 const styles = StyleSheet.create({
   mapContainer: {
     flex: 1,
